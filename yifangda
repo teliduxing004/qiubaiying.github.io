@@ -1,0 +1,357 @@
+客户          1
+基金账号      1
+交易账号      1
+传真号码
+网点
+打印日期
+申请日期       1
+确认日期       1
+申请流水号     1
+交易类别
+确认结果
+备注           1
+投资者类型     
+
+
+
+[{
+	u 'position': {
+		u 'width': 558,
+		u 'top': 48,
+		u 'left': 139,
+		u 'height': 23
+	},
+	u 'score': 1.0,
+	u 'words': u 'From:[E Fund Management Co., Ltd.] To:Fax:02085190902',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 330,
+		u 'top': 98,
+		u 'left': 356,
+		u 'height': 83
+	},
+	u 'score': 1.0,
+	u 'words': u '三易方达',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 107,
+		u 'top': 217,
+		u 'left': 304,
+		u 'height': 75
+	},
+	u 'score': 1.0,
+	u 'words': u '印公司章',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 216,
+		u 'top': 304,
+		u 'left': 747,
+		u 'height': 34
+	},
+	u 'score': 1.0,
+	u 'words': u '基金业务确认单',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 182,
+		u 'top': 338,
+		u 'left': 225,
+		u 'height': 55
+	},
+	u 'score': 1.0,
+	u 'words': u '业务专用章',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 50,
+		u 'top': 423,
+		u 'left': 423,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '客户',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 430,
+		u 'top': 397,
+		u 'left': 863,
+		u 'height': 30
+	},
+	u 'score': 1.0,
+	u 'words': u '易方达基金一招行一东吴证券配置优选',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 198,
+		u 'top': 445,
+		u 'left': 868,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '1号资产管理计划',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 496,
+		u 'left': 420,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '基金帐号',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 155,
+		u 'top': 498,
+		u 'left': 863,
+		u 'height': 25
+	},
+	u 'score': 1.0,
+	u 'words': u 'EF0100018415',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 546,
+		u 'left': 420,
+		u 'height': 32
+	},
+	u 'score': 1.0,
+	u 'words': u '交易帐号',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 123,
+		u 'top': 548,
+		u 'left': 863,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '0014143801',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 102,
+		u 'top': 621,
+		u 'left': 423,
+		u 'height': 30
+	},
+	u 'score': 1.0,
+	u 'words': u '传真号码',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 380,
+		u 'top': 598,
+		u 'left': 863,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '020-85190902,020-85104727,020-',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 646,
+		u 'left': 861,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '85104744',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 52,
+		u 'top': 697,
+		u 'left': 423,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '网点',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 100,
+		u 'top': 697,
+		u 'left': 863,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '中心柜台',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 747,
+		u 'left': 420,
+		u 'height': 30
+	},
+	u 'score': 1.0,
+	u 'words': u '打印日期',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 128,
+		u 'top': 749,
+		u 'left': 863,
+		u 'height': 25
+	},
+	u 'score': 1.0,
+	u 'words': u '2017-11-07',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 841,
+		u 'left': 420,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '申请日期',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 130,
+		u 'top': 843,
+		u 'left': 863,
+		u 'height': 27
+	},
+	u 'score': 1.0,
+	u 'words': u '2017-11-06',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 105,
+		u 'top': 893,
+		u 'left': 420,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '确认日期',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 130,
+		u 'top': 893,
+		u 'left': 861,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '2017-11-07',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 127,
+		u 'top': 943,
+		u 'left': 423,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '申请流水号',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 193,
+		u 'top': 943,
+		u 'left': 861,
+		u 'height': 25
+	},
+	u 'score': 1.0,
+	u 'words': u '201711061046068',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 102,
+		u 'top': 994,
+		u 'left': 423,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '交易类别',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 52,
+		u 'top': 994,
+		u 'left': 861,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '开户',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 102,
+		u 'top': 1044,
+		u 'left': 423,
+		u 'height': 27
+	},
+	u 'score': 1.0,
+	u 'words': u '确认结果',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 102,
+		u 'top': 1044,
+		u 'left': 861,
+		u 'height': 30
+	},
+	u 'score': 1.0,
+	u 'words': u '确认成功',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 55,
+		u 'top': 1096,
+		u 'left': 420,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '备注',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 203,
+		u 'top': 1093,
+		u 'left': 863,
+		u 'height': 32
+	},
+	u 'score': 1.0,
+	u 'words': u '|[OK]申请处理成功',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 141,
+		u 'top': 1147,
+		u 'left': 420,
+		u 'height': 29
+	},
+	u 'score': 1.0,
+	u 'words': u '投资者类型：',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 128,
+		u 'top': 1147,
+		u 'left': 863,
+		u 'height': 27
+	},
+	u 'score': 1.0,
+	u 'words': u '专业投资者',
+	u 'page_no': 0
+}, {
+	u 'position': {
+		u 'width': 116,
+		u 'top': 1329,
+		u 'left': 273,
+		u 'height': 28
+	},
+	u 'score': 1.0,
+	u 'words': u '网点签章:',
+	u 'page_no': 0
+}]
