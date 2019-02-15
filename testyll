@@ -1,0 +1,288 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2019/2/15 12:36
+
+
+# -*- coding: utf-8 -*-
+import base64, json, re, os
+from collections import OrderedDict
+
+import requests
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import json
+import pandas as pd
+
+from retime import text2date
+from column import db_column
+
+def db_con():
+    host = ''
+    user = 
+    charset = 'utf8'
+    db = 
+    engine = create_engine("mysql+pymysql://%s:%s@%s:3306/%s?charset=%s" % (user, password, host, db, charset))
+
+    DB_Session = sessionmaker(bind=engine)
+    session = DB_Session()
+    return session
+
+
+class allbank(object):
+
+    def get_content(self, filepath):
+        url = 'http://192.1.64.171/ocr/v1/general_multi_pages'
+        with open(filepath, "rb") as imageFile:
+            image_str = base64.b64encode(imageFile.read())
+        bodytmp = {
+            "image_base64": image_str,
+        }
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36'
+        }
+        res = requests.post(url, data=bodytmp, headers=headers, timeout=6000)
+        main_content = json.loads(res.content)
+        rest = main_content['result']
+        print rest
+        return rest
+
+    def one_form(self, o_dict, res, if_startswith=True):
+        result_dict = {}
+        for k, values in o_dict.items():
+            key = re.sub(r'\d+', '', k)
+            pop_index_list = []
+            for r in range(len(res)):
+                if key in res[r]['words']:
+                    result = ''.join(re.sub(u'[:： ]?', '', res[r]['words']).split(key, 1))
+                    if not res[r]['words'].startswith(key) and if_startswith:
+                        result = ''
+                    pop_num = r
+                    if not result:
+                        current_top = res[r]['position']['top']
+                        next_top = res[r + 1]['position']['top']
+                        if (next_top >= current_top and next_top <= current_top + 10) or \
+                                (next_top >= current_top - 5):
+                            result = ''.join(res[r + 1]['words'].split(key, 1))
+                            pop_num = r + 1
+                    if len(k) != len(key):
+                        pop_index_list.append(pop_num)
+                    if '付款人名称' in res[r]['words']:
+                        if '开户行' not in res[r + 1]['words']:
+                            result += res[r + 1]['words']
+
+                    result_dict[values] = result
+
+                    break
+
+            for pop_index in pop_index_list:
+                res.pop(pop_index)
+                res.pop(pop_index - 1)
+        # result_dict[u'金额'] = re.sub(u'[a-zA-Z,\u4e00-\u9fa5 ]?', '', result_dict[u'金额'])
+        result_dict[u'日期'] = text2date().extract(result_dict[u'日期'])
+        return result_dict
+
+    def more_form(self,res):
+        form_list = [] # [[{},{},...],[{},{},...]]
+        num = 0
+        for index, word in enumerate(res[1:]): # 切割每一个表单
+            if word['words'] == res[0]['words']:
+                form_list.append(res[num: index + 1])
+                num = index + 1
+            if index == len(res) - 2:
+                form_list.append(res[num:])
+        return form_list
+
+    def ordereddict(self, data_list):
+        o_dict = OrderedDict()
+        for data in data_list:
+            o_dict[data[0]] = data[1]
+        return o_dict
+
+
+class zhaohangbank(allbank):
+    def __init__(self):
+        self.data = [
+            [u'日期', u'日期'],
+            [u'收款账号', u'收款人账号'],
+            [u'户名', u'收款人户名'],
+            [u'开户行', u'收款人开户行'],
+            [u'(小写)', u'金额'],
+            [u'付款人账号', u'付款人账号'],
+            [u'付款人户名', u'付款人户名'],
+            [u'付款人开户行', u'付款人开户行'],
+            [u'摘要', u'摘要'],
+            [u'回单编号', u'回单编号'],
+            [u'回单验证码', u'验证码'],
+            [u'流水号', u'流水号'],
+        ]
+        self.o_dict = self.ordereddict(self.data)
+
+    def identify(self, file_path):
+        res = self.get_content(file_path)
+        result_dict = self.one_form(self.o_dict, res)
+        return [result_dict]
+
+
+class jiaohangbank(allbank):
+    def __init__(self):
+        self.data = [
+            [u'回单编号', u'回单编号'],
+            [u'回单类型', u'回单类型'],
+            [u'借贷标志', u'借贷标志'],
+            [u'币种', u'币种'],
+            [u'金额', u'金额'],
+            [u'付款人账号', u'付款人账号'],
+            [u'付款人名称', u'付款人户名'],
+            [u'开户行名称1', u'付款人开户行'],
+            [u'收款人账号', u'收款人账号'],
+            [u'收款人名称', u'收款人户名'],
+            [u'开户行名称2', u'收款人开户行'],
+            [u'摘要', u'摘要'],
+            [u'附加信息', u'附加信息'],
+            [u'记账日期', u'日期'],
+            [u'会计流水号', u'流水号'],
+            [u'批次号', u'批次号'],
+        ]
+        self.o_dict = self.ordereddict(self.data)
+
+    def identify(self, file_path):
+        res = self.get_content(file_path)
+        result_dict = self.one_form(self.o_dict, res, False)
+        result_dict[u'币种'] = re.sub(u'[^a-zA-Z]?', '', result_dict[u'币种'])
+        result_dict[u'收款人账号'] = re.sub(u'[^0-9]?', '', result_dict[u'收款人账号'])
+        result_dict[u'收款人户名'] = re.sub(u'[^\u4e00-\u9fa5]?', '', result_dict[u'收款人户名'])
+        result_dict[u'收款人开户行'] = '' if  u'币种' in result_dict[u'收款人开户行'] else result_dict[u'收款人开户行']
+        return [result_dict]
+
+
+class pinganbank(allbank):
+    def __init__(self):
+        self.data = [
+            [u'记账日期', u'日期'],
+            [u'回单号', u'回单编号'],
+            [u'验证码', u'验证码'],
+            [u'付款人名称', u'付款人户名'],
+            [u'收款人名称', u'收款人户名'],
+            [u'付款人账号', u'付款人账号'],
+            [u'收款人账号', u'收款人账号'],
+            [u'开户行1', u'付款人开户行'],
+            [u'开户行2', u'收款人开户行'],
+            [u'小写', u'金额'],
+            [u'备注', u'摘要'],
+        ]
+        self.o_dict =  self.ordereddict(self.data)
+
+    def identify(self, file_path):
+        res = self.get_content(file_path)
+        form_list = self.more_form(res)
+        # res_list = []
+        for form in form_list:
+            result_dict = self.one_form(self.o_dict, form)
+            result_dict[u'付款人户名'] = re.sub(u'收款人名称[：:]?', '', result_dict[u'付款人户名'])
+            yield result_dict
+            # res_list.append(result_dict)
+        # return res_list
+
+
+class zhonghangbank(allbank):
+    def __init__(self):
+        self.data = [
+            [u'日期', u'日期'],
+            [u'收款人账号', u'收款人账号'],
+            [u'付款人账号', u'付款人账号'],
+            [u'收款人名称', u'收款人名称'],
+            [u'付款人名称', u'付款人名称'],
+            [u'收款人开户行', u'收款人开户行'],
+            [u'付款人开户行', u'付款人开户行'],
+            [u'金额', u'金额'],
+            [u'用途', u'用途'],
+            [u'附言', u'附言'],
+            [u'交易流水号', u'交易流水号'],
+            [u'回单编号', u'回单编号'],
+            [u'回单验证码', u'回单验证码'],
+        ]
+        self.o_dict =  self.ordereddict(self.data)
+
+    def identify(self, file_path):
+        res = self.get_content(file_path)
+        # form_list = self.more_form(res)
+        res_list = []
+        form_list = [res[:len(res) / 2 + 1], res[len(res) / 2 + 1:]]
+        for form in form_list:
+            result_dict = self.one_form(self.o_dict, form)
+            try:
+                result_dict[u'用途'] = '' if re.findall(u'附言[:：]?', result_dict[u'用途']) else result_dict[u'用途']
+            except:
+                pass
+            res_list.append(result_dict)
+        return res_list
+
+
+def test(obj, dir_name):
+    df = pd.DataFrame()
+    paths = r'C:\Users\jrkj-shixi08\Desktop\zouzhenwang\receipt\%s'%(dir_name)
+    for path in os.listdir(paths):
+        print os.path.join(paths, path)
+        result = obj.identify(os.path.join(paths, path))
+        # result = obj.identify(r'C:\Users\jrkj-shixi07\Desktop\ocr_code\receipt\zhonghang1\76.pdf')
+        num = 1
+        for res in result:
+            print res
+            res[u'文件名'] = '中行_201812_page' + str(int(re.findall('(\d+)\.pdf', path)[0]) + 1) + '-%d'%num
+            df1 = pd.DataFrame([res])
+            df = df1.append(df)
+            num += 1
+
+    df.to_excel('C:\Users\jrkj-shixi08\Desktop\zouzhenwang\zhonghang1.xlsx', index=False, )
+
+if __name__ == '__main__':
+    # session = db_con()
+    zhaohang = zhaohangbank()
+    df = pd.DataFrame()
+    test(zhaohang, 'zhaohang1')
+
+    # for res in test(zhaohang, 'zhaohang1'):
+    #     print res
+        # df1 = pd.DataFrame(res)
+        # df = df1.append(df)
+    # df.to_excel('C:\Users\jrkj-shixi08\Desktop\zouzhenwang\zhaohang1\zhaohang1.xlsx', index=False, )
+
+
+    # jiaohang = jiaohangbank()
+    # for res in test(jiaohang, 'jiaohang'):
+    #     save_db = {}
+    #     text_index = '\n'.join([str(v) for k, v in res[0].items()])
+    #     for k, v in db_column.items():
+    #         print v, res[0].get(k)
+    #         save_db[v] = str(res[0].get(k, ''))
+    #     save_db['bank'] = u'交通银行'
+    #     sql = "INSERT into ocr_cw_hd (content, text_index) values (:content, :text_index)"
+    #     session.execute(sql, {'content': json.dumps(save_db),"text_index": text_index})
+    #     session.commit()
+    # session.close()
+
+
+    # zhonghang = zhonghangbank()
+    # test(zhonghang, 'zhonghang1')
+    # df = pd.DataFrame()
+    # for res in test(zhonghang, 'zhonghang1'):
+    #     for data in res:
+    #         print data
+    #         df1 = pd.DataFrame([data])
+    #         df = df1.append(df)
+    #
+    # df.to_excel('C:\Users\jrkj-shixi07\Desktop\zhonghang1.xlsx', index=False, )
+
+
+    # pingan = pinganbank()
+    # df = pd.DataFrame()
+    # for res in  test(pingan, 'pinan1'):
+    #     for data in res:
+    #         print data
+    #         df1 = pd.DataFrame([data])
+    #         df = df1.append(df)
+    #
+    # df.to_excel('C:\Users\jrkj-shixi07\Desktop\pingan1.xlsx', index=False, )
+    # session.close()
+
